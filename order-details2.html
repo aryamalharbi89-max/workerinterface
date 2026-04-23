@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UniBox - Order Details</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+  <style>
+    :root{
+      --primary:#8ED3F4; --navy:#1F3C5A; --white:#FFFFFF; --gray:#6B6B6B;
+      --border:#F1F4F9; --bg:#f0f2f5;
+
+      --dark-bg:#121212; --dark-frame:#1e1e1e; --dark-card:#232323;
+      --dark-border:#2f2f2f; --dark-text:#f3f4f6; --dark-muted:#a7a7a7;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
+    body{background:var(--bg);display:flex;justify-content:center;align-items:center;min-height:100dvh;transition:.25s}
+
+    .mobile-frame{
+      width:375px;height:812px;background:var(--white);border-radius:40px;overflow:hidden;
+      display:flex;flex-direction:column;box-shadow:0 20px 50px rgba(0,0,0,.10);
+      position:relative;
+    }
+
+    header{padding:60px 24px 10px;display:flex;align-items:center;justify-content:space-between}
+    .back-btn{
+      width:40px;height:40px;border-radius:14px;border:1px solid var(--border);background:#fff;
+      display:flex;align-items:center;justify-content:center;color:var(--navy);text-decoration:none;
+      transition:.15s; cursor:pointer;
+    }
+    .back-btn:active{transform:scale(.98)}
+
+    .content{flex:1;overflow-y:auto;padding:10px 24px 210px;}
+    h1{text-align:center;font-size:22px;font-weight:900;color:var(--navy);margin-bottom:14px}
+
+    .section-title{font-size:13px;font-weight:900;color:var(--gray);margin:15px 0 10px}
+
+    .card{
+      background:var(--white);border-radius:20px;padding:18px;margin-bottom:15px;border:1px solid var(--border);
+      box-shadow:0 4px 12px rgba(0,0,0,.03);
+    }
+
+    .row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .pill{
+      font-size:12px;font-weight:900;padding:6px 12px;border-radius:999px;
+      background:rgba(142,211,244,.18);color:var(--navy);
+      border:1px solid rgba(142,211,244,.35);text-transform:uppercase;white-space:nowrap;
+    }
+
+    .kv{display:grid;grid-template-columns: 1fr 1fr;gap:12px;margin-top:10px}
+    .kv .box{
+      border:1px solid var(--border);border-radius:16px;padding:12px;background:rgba(142,211,244,.06);
+    }
+    .k{font-size:11px;font-weight:900;color:var(--gray);text-transform:uppercase}
+    .v{margin-top:6px;font-size:14px;font-weight:900;color:var(--navy);word-break:break-word}
+
+    .map-link{
+      color:var(--navy);font-size:13px;font-weight:900;text-decoration:none;
+      display:inline-flex;align-items:center;gap:8px;margin-top:10px;
+    }
+    .map-link i{color:var(--primary)}
+
+    .notes-box{
+      background:rgba(245,233,219,.35);border:1px solid rgba(245,233,219,.7);
+      padding:14px;border-radius:16px;font-size:13px;line-height:1.55;font-style:italic;color:var(--navy);
+    }
+
+    .footer-action{
+      position:absolute;left:16px;right:16px;bottom:92px;
+      display:flex;flex-direction:column;gap:10px;
+    }
+    .btn{
+      width:100%;padding:14px;border:none;border-radius:16px;background:var(--primary);color:#fff;
+      font-weight:900;font-size:14px;cursor:pointer;box-shadow:0 8px 20px rgba(142,211,244,.30);
+      transition:.15s;
+    }
+    .btn:active{transform:scale(.98)}
+    .btn.secondary{background:transparent;color:var(--navy);border:1px solid var(--border);box-shadow:none}
+    .btn.danger{background:#ef4444;box-shadow:0 8px 20px rgba(239,68,68,.18)}
+
+    .bottom-nav{
+      position:absolute;left:16px;right:16px;bottom:16px;z-index:9999;
+      background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:22px;
+      padding:10px 8px;display:flex;justify-content:space-between;gap:6px;
+      box-shadow:0 12px 28px rgba(31,60,90,.10);backdrop-filter:blur(10px);
+    }
+    .nav-item{
+      flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:4px;padding:10px 6px;border-radius:16px;text-decoration:none;color:var(--gray);
+      font-weight:800;font-size:11px;transition:.15s;
+    }
+    .nav-item i{font-size:16px}
+    .nav-item:active{transform:scale(.98)}
+
+    body.dark{background:var(--dark-bg)}
+    body.dark .mobile-frame{background:var(--dark-frame);box-shadow:0 20px 50px rgba(0,0,0,.35)}
+    body.dark .back-btn{background:var(--dark-card);border-color:var(--dark-border);color:var(--dark-text)}
+    body.dark h1, body.dark .v{color:var(--dark-text)}
+    body.dark .section-title, body.dark .k{color:var(--dark-muted)}
+    body.dark .card{background:var(--dark-card);border-color:var(--dark-border);box-shadow:0 4px 12px rgba(0,0,0,.25)}
+    body.dark .pill{background:rgba(142,211,244,.14);color:var(--dark-text);border-color:rgba(142,211,244,.25)}
+    body.dark .map-link{color:var(--dark-text)}
+    body.dark .notes-box{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.10);color:var(--dark-text)}
+    body.dark .kv .box{background:rgba(255,255,255,.04);border-color:var(--dark-border)}
+    body.dark .btn.secondary{color:var(--dark-text);border-color:var(--dark-border)}
+    body.dark .bottom-nav{background:rgba(35,35,35,.92);border-color:var(--dark-border)}
+    body.dark .nav-item{color:var(--dark-muted)}
+    body.dark .nav-item.active{color:var(--dark-text);background:rgba(142,211,244,.12);border:1px solid rgba(142,211,244,.20)}
+  </style>
+
+  <link rel="stylesheet" href="theme.css">
+</head>
+
+<body>
+  <div class="mobile-frame">
+
+    <header>
+      <a class="back-btn" href="#" onclick="goBack(); return false;" aria-label="Back">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
+      <div style="width:40px;"></div>
+    </header>
+
+    <div class="content">
+      <h1>Order Details</h1>
+
+      <div class="section-title">Summary</div>
+      <div class="card">
+        <div class="row">
+          <div class="v" id="orderId">#----</div>
+          <span class="pill" id="statusText">--</span>
+        </div>
+        <div class="kv">
+          <div class="box">
+            <div class="k">Time</div>
+            <div class="v" id="timeText">—</div>
+          </div>
+          <div class="box">
+            <div class="k">Zone</div>
+            <div class="v" id="zoneText">—</div>
+          </div>
+          <div class="box">
+            <div class="k">Parcel Size</div>
+            <div class="v" id="sizeText">—</div>
+          </div>
+          <div class="box">
+            <div class="k">Assigned Locker</div>
+            <div class="v" id="lockerText">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">Customer</div>
+      <div class="card">
+        <div class="k">Name & Phone</div>
+        <div class="v" id="customerName">-</div>
+      </div>
+
+      <div class="section-title">Delivery Address</div>
+      <div class="card">
+        <div class="k">Location</div>
+        <div class="v" id="locationText">-</div>
+
+        <a href="#" class="map-link" id="map2Link">
+          <i class="fa-solid fa-map-location-dot"></i><span>Open Map2</span>
+        </a>
+        <a href="#" class="map-link" id="googleMapLink" target="_blank" rel="noopener">
+          <i class="fa-brands fa-google"></i><span>Open in Google Maps</span>
+        </a>
+      </div>
+
+      <div class="section-title">Tracking</div>
+      <div class="card">
+        <div class="k">Last Action</div>
+        <div class="v" id="lastAction">—</div>
+
+        <div class="k" style="margin-top:12px">Delivered At</div>
+        <div class="v" id="deliveredAt">—</div>
+      </div>
+
+      <div class="section-title">Instructions</div>
+      <div class="card">
+        <div class="notes-box" id="notesBox">
+          Please make sure the locker size matches the parcel size.
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-action">
+      <button class="btn" id="lockerBtn">Proceed to Locker Selection</button>
+      <button class="btn secondary" id="openLockerBtn">Send Open Command (Demo)</button>
+      <button class="btn danger" id="deliveredBtn">Mark Delivered</button>
+    </div>
+
+    <nav class="bottom-nav">
+      <a class="nav-item" href="home2.html"><i class="fa-solid fa-house"></i><span>Home</span></a>
+      <a class="nav-item" href="map2.html"><i class="fa-solid fa-map-location-dot"></i><span>Map</span></a>
+      <a class="nav-item" href="locker-selection2.html"><i class="fa-solid fa-box"></i><span>Lockers</span></a>
+      <a class="nav-item" href="settings2.html"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+    </nav>
+
+  </div>
+
+  <script src="app.js"></script>
+  <script src="components.js"></script>
+
+  <script>
+    function goBack() {
+      if (document.referrer && document.referrer !== "") {
+        history.back();
+      } else {
+        window.location.href = "home2.html";
+      }
+    }
+
+    const params = new URLSearchParams(location.search);
+    const id = params.get("order");
+
+    function fmtDate(iso){
+      if(!iso) return "—";
+      try{
+        return new Date(iso).toLocaleString();
+      }catch(e){
+        return iso;
+      }
+    }
+
+    function getFallbackOrder(orderId){
+      const demoOrders = {
+        "9821": {
+          id:"9821",
+          status:"Pending",
+          time:"09:00 - 11:00 AM",
+          lockerZone:"A",
+          size:"S",
+          assignedLocker:"",
+          customer:"Ahmed Mansour",
+          phone:"0501234567",
+          location:"Zone A, Locker Area 12",
+          lat:21.543333,
+          lng:39.172779,
+          lastAction:{ type:"ORDER_CREATED", at:new Date().toISOString() },
+          deliveredAt:"",
+          notes:"Handle carefully. Small parcel.",
+          canDeliver:false
+        },
+        "9822": {
+          id:"9822",
+          status:"Assigned",
+          time:"10:00 - 12:00 PM",
+          lockerZone:"B",
+          size:"M",
+          assignedLocker:"",
+          customer:"Sara Ali",
+          phone:"0507654321",
+          location:"Zone B, Locker Area 15",
+          lat:21.550000,
+          lng:39.180000,
+          lastAction:{ type:"ASSIGNED", at:new Date().toISOString() },
+          deliveredAt:"",
+          notes:"Medium parcel. Confirm locker access before deposit.",
+          canDeliver:false
+        },
+        "9823": {
+          id:"9823",
+          status:"Completed",
+          time:"11:00 - 01:00 PM",
+          lockerZone:"C",
+          size:"L",
+          assignedLocker:"F2",
+          customer:"John Doe",
+          phone:"0559876543",
+          location:"Zone C, Locker Area 8",
+          lat:21.555500,
+          lng:39.188800,
+          lastAction:{ type:"DELIVERED", at:new Date().toISOString() },
+          deliveredAt:new Date().toISOString(),
+          notes:"Large parcel already delivered.",
+          canDeliver:true
+        },
+        "9824": {
+          id:"9824",
+          status:"Pending",
+          time:"12:00 - 02:00 PM",
+          lockerZone:"D",
+          size:"M",
+          assignedLocker:"",
+          customer:"Fatma Ibrahim",
+          phone:"0531112223",
+          location:"Zone D, Locker Area 10",
+          lat:21.560000,
+          lng:39.190000,
+          lastAction:{ type:"PENDING", at:new Date().toISOString() },
+          deliveredAt:"",
+          notes:"Match medium parcel with M or L locker.",
+          canDeliver:false
+        },
+        "9825": {
+          id:"9825",
+          status:"Completed",
+          time:"01:00 - 03:00 PM",
+          lockerZone:"E",
+          size:"S",
+          assignedLocker:"A4",
+          customer:"Ali Hossam",
+          phone:"0544448899",
+          location:"Zone E, Locker Area 3",
+          lat:21.565000,
+          lng:39.194000,
+          lastAction:{ type:"DELIVERED", at:new Date().toISOString() },
+          deliveredAt:new Date().toISOString(),
+          notes:"Completed successfully.",
+          canDeliver:true
+        }
+      };
+
+      return demoOrders[String(orderId)] || {
+        id: orderId || "----",
+        status:"Pending",
+        time:"—",
+        lockerZone:"A",
+        size:"M",
+        assignedLocker:"",
+        customer:"Unknown Customer",
+        phone:"—",
+        location:"Unknown Location",
+        lat:null,
+        lng:null,
+        lastAction:{ type:"CREATED", at:new Date().toISOString() },
+        deliveredAt:"",
+        notes:"Please make sure the locker size matches the parcel size.",
+        canDeliver:false
+      };
+    }
+
+    function getOrderByIdSafe(orderId){
+      try{
+        if(window.UniBox && typeof UniBox.getOrderById === "function"){
+          const realOrder = UniBox.getOrderById(orderId);
+          if(realOrder) return realOrder;
+        }
+      }catch(e){}
+      return getFallbackOrder(orderId);
+    }
+
+    const order = getOrderByIdSafe(id);
+
+    if(!order){
+      document.getElementById("statusText").innerText = "Not Found";
+      document.getElementById("notesBox").innerText =
+        "Order not found. Please go back and select an order again.";
+      document.getElementById("lockerBtn").onclick = ()=> location.href="home2.html";
+      document.getElementById("openLockerBtn").onclick = ()=> location.href="home2.html";
+      document.getElementById("deliveredBtn").onclick = ()=> location.href="home2.html";
+    } else {
+      document.getElementById("orderId").innerText = "#UB-" + (order.id || "----");
+      document.getElementById("statusText").innerText = order.status || "—";
+
+      document.getElementById("timeText").innerText = order.time || "—";
+      document.getElementById("zoneText").innerText = order.lockerZone ? ("Zone " + order.lockerZone) : "—";
+      document.getElementById("sizeText").innerText = order.size || "—";
+      document.getElementById("lockerText").innerText = order.assignedLocker || "Not Assigned";
+
+      document.getElementById("customerName").innerText =
+        `👤 ${order.customer || "—"}  •  📞 ${order.phone || "—"}`;
+
+      document.getElementById("locationText").innerText = `📍 ${order.location || "—"}`;
+
+      document.getElementById("notesBox").innerText =
+        order.notes || "Please make sure the locker size matches the parcel size.";
+
+      document.getElementById("map2Link").onclick = (e)=>{
+        e.preventDefault();
+        localStorage.setItem("selectedOrderId", String(order.id || ""));
+        location.href = `map2.html?order=${encodeURIComponent(order.id || "")}`;
+      };
+
+      if(order.lat != null && order.lng != null){
+        document.getElementById("googleMapLink").href =
+          `https://www.google.com/maps?q=${encodeURIComponent(order.lat)},${encodeURIComponent(order.lng)}`;
+      } else {
+        document.getElementById("googleMapLink").href =
+          `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.location || "")}`;
+      }
+
+      const la = order.lastAction
+        ? `${order.lastAction.type || "ACTION"} • ${fmtDate(order.lastAction.at)}`
+        : "—";
+
+      document.getElementById("lastAction").innerText = la;
+      document.getElementById("deliveredAt").innerText = fmtDate(order.deliveredAt);
+
+      document.getElementById("lockerBtn").onclick = ()=>{
+        location.href = `locker-selection2.html?order=${encodeURIComponent(order.id || "")}`;
+      };
+
+      document.getElementById("openLockerBtn").onclick = ()=>{
+        if(!order.assignedLocker){
+          alert("No locker assigned yet. Choose a locker first.");
+          return;
+        }
+
+        if(window.UniBox && typeof UniBox.openLocker === "function"){
+          try{
+            UniBox.openLocker(order.id, order.assignedLocker);
+          }catch(e){}
+        }
+
+        alert(`Unlock command sent for locker ${order.assignedLocker} (demo).`);
+      };
+
+      document.getElementById("deliveredBtn").onclick = ()=>{
+        if(!confirm("Mark this order as Delivered?")) return;
+
+        if(window.UniBox && typeof UniBox.confirmDeposit === "function"){
+          try{
+            UniBox.confirmDeposit(order.id);
+          }catch(e){}
+        }
+
+        alert("Order marked as Delivered ✅");
+        location.reload();
+      };
+    }
+  </script>
+
+  <script>
+  if(localStorage.getItem("unibox_dark_mode") === "1"){
+      document.body.classList.add("dark");
+  }
+  </script>
+</body>
+</html>

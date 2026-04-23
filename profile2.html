@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>UniBox - Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="theme.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --primary:#8ED3F4;
+      --navy:#1F3C5A;
+      --white:#FFFFFF;
+      --gray:#6B6B6B;
+      --border:#F1F4F9;
+      --bg:#f0f2f5;
+      --danger:#e74c3c;
+
+      --dark-bg:#121212;
+      --dark-frame:#1e1e1e;
+      --dark-card:#232323;
+      --dark-border:#2f2f2f;
+      --dark-text:#f3f4f6;
+      --dark-muted:#a7a7a7;
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    body{
+      background:var(--bg);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100dvh;
+      transition:.25s;
+    }
+
+    .mobile-frame{
+      width:375px;
+      height:812px;
+      background:var(--white);
+      border-radius:40px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      box-shadow:0 20px 50px rgba(0,0,0,0.1);
+      position:relative;
+    }
+
+    header{
+      padding:60px 24px 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .icon-btn{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      color:var(--navy);
+      transition:.15s;
+      cursor:pointer;
+      flex-shrink:0;
+      position:relative;
+      z-index:3;
+    }
+
+    .icon-btn:active{ transform:scale(.98); }
+
+    .header-title{
+      flex:1;
+      text-align:center;
+      font-weight:900;
+      font-size:20px;
+      color:var(--navy);
+    }
+
+    .content{
+      flex:1;
+      overflow-y:auto;
+      padding:10px 24px 92px;
+      position:relative;
+      z-index:1;
+    }
+
+    .profile-card{
+      background:#f0faff;
+      border:1px solid var(--border);
+      border-radius:26px;
+      padding:18px;
+      text-align:center;
+      margin-bottom:14px;
+    }
+
+    .avatar{
+      width:92px;
+      height:92px;
+      border-radius:26px;
+      object-fit:cover;
+      border:1px solid var(--border);
+      background:#fff;
+    }
+
+    .profile-card h2{
+      margin-top:12px;
+      font-size:18px;
+      font-weight:900;
+      color:var(--navy);
+    }
+
+    .profile-card p{
+      margin-top:6px;
+      font-size:13px;
+      color:var(--gray);
+      font-weight:700;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin:14px 0;
+    }
+
+    .stat{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:14px;
+      text-align:center;
+      box-shadow:0 4px 12px rgba(0,0,0,.03);
+    }
+
+    .stat strong{
+      display:block;
+      font-size:22px;
+      font-weight:900;
+      color:var(--navy);
+    }
+
+    .stat span{
+      font-size:11px;
+      color:var(--gray);
+      font-weight:800;
+    }
+
+    .section-title{
+      margin:16px 0 10px;
+      font-size:13px;
+      font-weight:900;
+      color:var(--gray);
+      text-transform:uppercase;
+    }
+
+    .menu{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .menu a{
+      text-decoration:none;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      color:var(--navy);
+      font-size:14px;
+      font-weight:800;
+      box-shadow:0 4px 12px rgba(0,0,0,.03);
+    }
+
+    .menu a .right{
+      color:var(--gray);
+    }
+
+    .logout-btn{
+      width:100%;
+      padding:14px;
+      margin-top:16px;
+      border:1px solid rgba(231,76,60,0.35);
+      background:#fff;
+      color:var(--danger);
+      border-radius:18px;
+      font-size:15px;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 4px 12px rgba(0,0,0,.03);
+    }
+
+    .logout-btn:active{
+      transform:scale(.98);
+    }
+
+    .bottom-nav{
+      position:absolute;
+      left:16px;
+      right:16px;
+      bottom:16px;
+      z-index:9999;
+      background:rgba(255,255,255,.92);
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:10px 8px;
+      display:flex;
+      justify-content:space-between;
+      gap:6px;
+      box-shadow:0 12px 28px rgba(31,60,90,.10);
+      backdrop-filter:blur(10px);
+    }
+
+    .nav-item{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:4px;
+      padding:10px 6px;
+      border-radius:16px;
+      text-decoration:none;
+      color:var(--gray);
+      font-weight:800;
+      font-size:11px;
+      transition:.15s;
+    }
+
+    .nav-item i{
+      font-size:16px;
+    }
+
+    .nav-item:active{
+      transform:scale(.98);
+    }
+
+    .nav-item.active{
+      background:rgba(142,211,244,.18);
+      color:var(--navy);
+      border:1px solid rgba(142,211,244,.25);
+    }
+
+    body.dark{
+      background:var(--dark-bg);
+    }
+
+    body.dark .mobile-frame{
+      background:var(--dark-frame);
+      box-shadow:0 20px 50px rgba(0,0,0,.35);
+    }
+
+    body.dark .icon-btn{
+      background:var(--dark-card);
+      border-color:var(--dark-border);
+      color:var(--dark-text);
+    }
+
+    body.dark .header-title,
+    body.dark .profile-card h2,
+    body.dark .stat strong,
+    body.dark .menu a{
+      color:var(--dark-text);
+    }
+
+    body.dark .profile-card p,
+    body.dark .section-title,
+    body.dark .stat span,
+    body.dark .menu a .right{
+      color:var(--dark-muted);
+    }
+
+    body.dark .profile-card{
+      background:rgba(142,211,244,.08);
+      border-color:var(--dark-border);
+    }
+
+    body.dark .avatar{
+      background:var(--dark-card);
+      border-color:var(--dark-border);
+    }
+
+    body.dark .stat,
+    body.dark .menu a,
+    body.dark .logout-btn{
+      background:var(--dark-card);
+      border-color:var(--dark-border);
+      box-shadow:0 4px 12px rgba(0,0,0,.25);
+    }
+
+    body.dark .bottom-nav{
+      background:rgba(35,35,35,.92);
+      border-color:var(--dark-border);
+    }
+
+    body.dark .nav-item{
+      color:var(--dark-muted);
+    }
+
+    body.dark .nav-item.active{
+      color:var(--dark-text);
+      background:rgba(142,211,244,.12);
+      border:1px solid rgba(142,211,244,.20);
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="mobile-frame">
+
+  <header>
+    <a class="icon-btn" href="#" onclick="goBack(); return false;" aria-label="Back">
+      <i class="fa-solid fa-arrow-left"></i>
+    </a>
+
+    <div class="header-title">Profile</div>
+
+    <a class="icon-btn" href="settings2.html" aria-label="Settings">
+      <i class="fa-solid fa-gear"></i>
+    </a>
+  </header>
+
+  <div class="content">
+
+    <div class="profile-card">
+      <img id="profileAvatar" class="avatar" src="" alt="Profile">
+      <h2 id="profileName">Ahmed Ali</h2>
+      <p id="profileEmail">ahmed.ali@unibox.com</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <strong id="totalPackages">12</strong>
+        <span>TOTAL PACKAGES</span>
+      </div>
+      <div class="stat">
+        <strong id="activePackages">02</strong>
+        <span>ACTIVE</span>
+      </div>
+    </div>
+
+    <div class="section-title">Account</div>
+    <div class="menu">
+      <a href="edit-profile2.html">
+        <span>Edit Profile</span>
+        <span class="right"><i class="fa-solid fa-chevron-right"></i></span>
+      </a>
+
+      <a href="map2.html">
+        <span>Locker Locations</span>
+        <span class="right"><i class="fa-solid fa-chevron-right"></i></span>
+      </a>
+
+      <a href="home2.html">
+        <span>Recent Orders</span>
+        <span class="right"><i class="fa-solid fa-chevron-right"></i></span>
+      </a>
+
+      <a href="support2.html?from=profile">
+        <span>Legal & Support</span>
+        <span class="right"><i class="fa-solid fa-chevron-right"></i></span>
+      </a>
+    </div>
+
+    <button class="logout-btn" onclick="confirmLogout()">Log Out</button>
+
+  </div>
+
+  <nav class="bottom-nav">
+    <a class="nav-item" href="home2.html">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </a>
+
+    <a class="nav-item" href="map2.html">
+      <i class="fa-solid fa-map-location-dot"></i>
+      <span>Map</span>
+    </a>
+
+    <a class="nav-item" href="locker-selection2.html">
+      <i class="fa-solid fa-box"></i>
+      <span>Lockers</span>
+    </a>
+
+    <a class="nav-item active" href="profile2.html">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+</div>
+
+<script>
+function goBack(){
+  if(document.referrer && document.referrer !== ""){
+    history.back();
+  }else{
+    window.location.href = "home2.html";
+  }
+}
+
+function confirmLogout(){
+  if(confirm("هل أنت متأكد من تسجيل الخروج؟")){
+    window.location.href = "welcome.html";
+  }
+}
+
+const savedName = localStorage.getItem("unibox_name");
+const savedEmail = localStorage.getItem("unibox_email");
+const savedAvatar = localStorage.getItem("unibox_avatar");
+const savedTotal = localStorage.getItem("unibox_total_packages");
+const savedActive = localStorage.getItem("unibox_active_packages");
+
+if(savedName) document.getElementById("profileName").innerText = savedName;
+if(savedEmail) document.getElementById("profileEmail").innerText = savedEmail;
+if(savedTotal) document.getElementById("totalPackages").innerText = savedTotal;
+if(savedActive) document.getElementById("activePackages").innerText = savedActive;
+
+const avatarEl = document.getElementById("profileAvatar");
+if(savedAvatar){
+  avatarEl.src = savedAvatar;
+}else{
+  avatarEl.src = "https://via.placeholder.com/150x150.png?text=Profile";
+}
+</script>
+
+<script>
+if(localStorage.getItem("unibox_dark_mode")==="1"){
+  document.body.classList.add("dark");
+}
+</script>
+
+</body>
+</html>

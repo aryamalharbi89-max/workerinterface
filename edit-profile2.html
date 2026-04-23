@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UniBox - Edit Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+  <style>
+    :root{
+      --primary:#8ED3F4;
+      --navy:#1F3C5A;
+      --white:#fff;
+      --gray:#6B6B6B;
+      --border:#F1F4F9;
+      --bg:#f0f2f5;
+      --dark-bg:#121212;
+      --dark-frame:#1e1e1e;
+      --dark-card:#232323;
+      --dark-border:#2f2f2f;
+      --dark-text:#f3f4f6;
+      --dark-muted:#a7a7a7;
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    body{
+      background:var(--bg);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100dvh;
+      transition:.25s;
+    }
+
+    .mobile-frame{
+      width:375px;
+      height:812px;
+      background:var(--white);
+      border-radius:40px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      box-shadow:0 20px 50px rgba(0,0,0,.10);
+      position:relative;
+    }
+
+    header{
+      padding:60px 24px 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .icon-btn{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--navy);
+      text-decoration:none;
+      cursor:pointer;
+      transition:.15s;
+      flex-shrink:0;
+      position:relative;
+      z-index:3;
+    }
+
+    .icon-btn:active{
+      transform:scale(.98);
+    }
+
+    .header-title{
+      flex:1;
+      text-align:center;
+      font-weight:900;
+      font-size:20px;
+      color:var(--navy);
+    }
+
+    .header-spacer{
+      width:40px;
+      height:40px;
+      flex-shrink:0;
+    }
+
+    .content{
+      flex:1;
+      overflow-y:auto;
+      padding:10px 24px 92px;
+      position:relative;
+      z-index:1;
+    }
+
+    h1{
+      text-align:center;
+      font-size:22px;
+      font-weight:900;
+      color:var(--navy);
+      margin-bottom:10px;
+    }
+
+    .sub{
+      text-align:center;
+      font-size:13px;
+      color:var(--gray);
+      font-weight:700;
+      margin-bottom:16px;
+    }
+
+    .card{
+      background:var(--white);
+      border-radius:20px;
+      padding:18px;
+      border:1px solid var(--border);
+      box-shadow:0 4px 12px rgba(0,0,0,.03);
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      font-weight:900;
+      color:var(--gray);
+      margin:12px 0 6px;
+      text-transform:uppercase;
+    }
+
+    input{
+      width:100%;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      outline:none;
+      font-weight:800;
+      background:#fff;
+      color:var(--navy);
+    }
+
+    .avatar-wrap{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+      margin-bottom:8px;
+    }
+
+    .avatar-preview{
+      width:92px;
+      height:92px;
+      border-radius:26px;
+      object-fit:cover;
+      border:1px solid var(--border);
+      background:#fff;
+      display:block;
+    }
+
+    .file-input{
+      width:100%;
+      padding:10px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:#fff;
+      color:var(--navy);
+      font-weight:700;
+    }
+
+    .btn{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:16px;
+      background:var(--primary);
+      color:#fff;
+      font-weight:900;
+      font-size:14px;
+      margin-top:14px;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(142,211,244,.30);
+      transition:.15s;
+    }
+
+    .btn:active{
+      transform:scale(.98);
+    }
+
+    .btn.secondary{
+      background:transparent;
+      color:var(--navy);
+      border:1px solid var(--border);
+      box-shadow:none;
+    }
+
+    .toast{
+      display:none;
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(34,197,94,.25);
+      background:rgba(34,197,94,.10);
+      font-weight:900;
+      color:var(--navy);
+      font-size:13px;
+    }
+
+    .bottom-nav{
+      position:absolute;
+      left:16px;
+      right:16px;
+      bottom:16px;
+      z-index:9999;
+      background:rgba(255,255,255,.92);
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:10px 8px;
+      display:flex;
+      justify-content:space-between;
+      gap:6px;
+      box-shadow:0 12px 28px rgba(31,60,90,.10);
+      backdrop-filter:blur(10px);
+    }
+
+    .nav-item{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:4px;
+      padding:10px 6px;
+      border-radius:16px;
+      text-decoration:none;
+      color:var(--gray);
+      font-weight:800;
+      font-size:11px;
+      transition:.15s;
+    }
+
+    .nav-item i{
+      font-size:16px;
+    }
+
+    .nav-item:active{
+      transform:scale(.98);
+    }
+
+    .nav-item.active{
+      background:rgba(142,211,244,.18);
+      color:var(--navy);
+      border:1px solid rgba(142,211,244,.25);
+    }
+
+    body.dark{
+      background:var(--dark-bg);
+    }
+
+    body.dark .mobile-frame{
+      background:var(--dark-frame);
+      box-shadow:0 20px 50px rgba(0,0,0,.35);
+    }
+
+    body.dark .icon-btn{
+      background:var(--dark-card);
+      border-color:var(--dark-border);
+      color:var(--dark-text);
+    }
+
+    body.dark .header-title,
+    body.dark h1{
+      color:var(--dark-text);
+    }
+
+    body.dark .sub,
+    body.dark label{
+      color:var(--dark-muted);
+    }
+
+    body.dark .card{
+      background:var(--dark-card);
+      border-color:var(--dark-border);
+      box-shadow:0 4px 12px rgba(0,0,0,.25);
+    }
+
+    body.dark input,
+    body.dark .file-input{
+      background:rgba(255,255,255,.04);
+      border-color:var(--dark-border);
+      color:var(--dark-text);
+    }
+
+    body.dark .avatar-preview{
+      background:var(--dark-card);
+      border-color:var(--dark-border);
+    }
+
+    body.dark .btn.secondary{
+      color:var(--dark-text);
+      border-color:var(--dark-border);
+    }
+
+    body.dark .toast{
+      color:var(--dark-text);
+      border-color:rgba(34,197,94,.22);
+      background:rgba(34,197,94,.08);
+    }
+
+    body.dark .bottom-nav{
+      background:rgba(35,35,35,.92);
+      border-color:var(--dark-border);
+    }
+
+    body.dark .nav-item{
+      color:var(--dark-muted);
+    }
+
+    body.dark .nav-item.active{
+      color:var(--dark-text);
+      background:rgba(142,211,244,.12);
+      border:1px solid rgba(142,211,244,.20);
+    }
+  </style>
+
+  <link rel="stylesheet" href="theme.css">
+</head>
+
+<body>
+  <div class="mobile-frame">
+    <header>
+      <a class="icon-btn" href="#" onclick="goBack(); return false;" aria-label="Back">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
+
+      <div class="header-title">Edit Profile</div>
+
+      <div class="header-spacer"></div>
+    </header>
+
+    <div class="content">
+      <h1>Edit Profile</h1>
+      <div class="sub">Update your info and photo</div>
+
+      <div class="card">
+        <label>Profile Photo</label>
+        <div class="avatar-wrap">
+          <img id="avatarPreview" class="avatar-preview" src="" alt="Profile Preview">
+          <input id="avatarInput" class="file-input" type="file" accept="image/*">
+        </div>
+
+        <label>Name</label>
+        <input id="name" placeholder="Full name" autocomplete="name"/>
+
+        <label>Role</label>
+        <input id="role" placeholder="Role" autocomplete="organization-title"/>
+
+        <label>Phone</label>
+        <input id="phone" placeholder="+966..." inputmode="tel" autocomplete="tel"/>
+
+        <label>Email</label>
+        <input id="email" type="email" placeholder="name@example.com" autocomplete="email"/>
+
+        <button class="btn" id="saveBtn" type="button">Save</button>
+        <button class="btn secondary" type="button" onclick="location.href='profile2.html'">Cancel</button>
+
+        <div class="toast" id="toast">Saved ✅</div>
+      </div>
+    </div>
+
+    <nav class="bottom-nav">
+      <a class="nav-item" href="home2.html">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+      </a>
+
+      <a class="nav-item" href="map2.html">
+        <i class="fa-solid fa-map-location-dot"></i>
+        <span>Map</span>
+      </a>
+
+      <a class="nav-item" href="locker-selection2.html">
+        <i class="fa-solid fa-box"></i>
+        <span>Lockers</span>
+      </a>
+
+      <a class="nav-item active" href="profile2.html">
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
+      </a>
+    </nav>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="components.js"></script>
+
+  <script>
+    function goBack(){
+      if(document.referrer && document.referrer !== ""){
+        history.back();
+      }else{
+        location.href = "profile2.html";
+      }
+    }
+
+    let state = {};
+    let user = {};
+
+    try{
+      state = (window.UniBox && typeof UniBox.getState === "function") ? UniBox.getState() : {};
+      user = state.user || {};
+    }catch(e){
+      user = {};
+    }
+
+    const $name  = document.getElementById("name");
+    const $role  = document.getElementById("role");
+    const $phone = document.getElementById("phone");
+    const $email = document.getElementById("email");
+    const $toast = document.getElementById("toast");
+    const $avatarInput = document.getElementById("avatarInput");
+    const $avatarPreview = document.getElementById("avatarPreview");
+
+    $name.value  = user.name  || localStorage.getItem("unibox_name")  || "";
+    $role.value  = user.role  || localStorage.getItem("unibox_role")  || "";
+    $phone.value = user.phone || localStorage.getItem("unibox_phone") || "";
+    $email.value = user.email || localStorage.getItem("unibox_email") || "";
+
+    const savedAvatar = localStorage.getItem("unibox_avatar");
+    $avatarPreview.src = savedAvatar || "https://via.placeholder.com/150x150.png?text=Profile";
+
+    $avatarInput.addEventListener("change", function(){
+      const file = this.files[0];
+      if(!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e){
+        $avatarPreview.src = e.target.result;
+        localStorage.setItem("unibox_avatar", e.target.result);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function showToast(){
+      $toast.style.display = "block";
+      setTimeout(()=>{ $toast.style.display = "none"; }, 900);
+    }
+
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      const patch = {
+        name:  $name.value.trim(),
+        role:  $role.value.trim(),
+        phone: $phone.value.trim(),
+        email: $email.value.trim()
+      };
+
+      try{
+        if(window.UniBox && typeof UniBox.updateUser === "function"){
+          UniBox.updateUser(patch);
+        }
+      }catch(e){}
+
+      localStorage.setItem("unibox_name", patch.name);
+      localStorage.setItem("unibox_role", patch.role);
+      localStorage.setItem("unibox_phone", patch.phone);
+      localStorage.setItem("unibox_email", patch.email);
+
+      showToast();
+
+      setTimeout(()=>{
+        location.href = "profile2.html";
+      }, 450);
+    });
+  </script>
+
+  <script>
+    if(localStorage.getItem("unibox_dark_mode") === "1"){
+      document.body.classList.add("dark");
+    }
+  </script>
+</body>
+</html>

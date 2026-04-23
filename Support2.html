@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>UniBox - Support 2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="theme.css">
+
+  <style>
+    :root{
+      --primary:#8ED3F4;
+      --navy:#1F3C5A;
+      --white:#FFFFFF;
+      --gray:#6B6B6B;
+      --border:#F1F4F9;
+      --bg:#f0f2f5;
+      --success:#22c55e;
+
+      --dark-bg:#121212;
+      --dark-frame:#1e1e1e;
+      --dark-card:#232323;
+      --dark-border:#2f2f2f;
+      --dark-text:#f3f4f6;
+      --dark-muted:#a7a7a7;
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    body{
+      background:var(--bg);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100dvh;
+      transition:.25s;
+    }
+
+    .mobile-frame{
+      width:375px;
+      height:812px;
+      background:var(--white);
+      border-radius:40px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      box-shadow:0 20px 50px rgba(0,0,0,0.1);
+      position:relative;
+    }
+
+    header{
+      padding:60px 24px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .back-btn{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--navy);
+      text-decoration:none;
+      transition:.15s;
+      cursor:pointer;
+      flex-shrink:0;
+    }
+
+    .back-btn:active{
+      transform:scale(.98);
+    }
+
+    .header-title{
+      flex:1;
+      text-align:center;
+      font-size:20px;
+      font-weight:900;
+      color:var(--navy);
+    }
+
+    .header-spacer{
+      width:40px;
+      height:40px;
+      flex-shrink:0;
+    }
+
+    .container{
+      flex:1;
+      overflow-y:auto;
+      padding:10px 24px 92px;
+    }
+
+    .section-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--gray);
+      margin:14px 0 10px;
+      text-transform:uppercase;
+    }
+
+    .hero{
+      background:#f0faff;
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:16px;
+      text-align:center;
+      box-shadow:0 4px 12px rgba(0,0,0,0.02);
+      margin-bottom:14px;
+    }
+
+    .hero .icon{
+      width:56px;
+      height:56px;
+      border-radius:18px;
+      background:#fff;
+      border:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:0 auto 10px;
+      color:var(--primary);
+      font-size:22px;
+    }
+
+    .hero .t{
+      font-weight:900;
+      color:var(--navy);
+      font-size:16px;
+      margin-bottom:4px;
+    }
+
+    .hero .s{
+      color:var(--gray);
+      font-size:13px;
+      line-height:1.5;
+      font-weight:700;
+    }
+
+    .quick-contact{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .quick-contact button{
+      width:100%;
+      padding:16px;
+      border:none;
+      border-radius:18px;
+      background:var(--primary);
+      color:#fff;
+      font-size:14px;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(142,211,244,0.35);
+      transition:.15s;
+    }
+
+    .quick-contact button:active{
+      transform:scale(.98);
+    }
+
+    .quick-contact button.secondary{
+      background:#fff;
+      color:var(--navy);
+      border:1px solid var(--border);
+      box-shadow:0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .faq-card{
+      background:#fff;
+      border-radius:20px;
+      padding:16px;
+      margin-bottom:12px;
+      border:1px solid var(--border);
+      box-shadow:0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .faq-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-size:14px;
+      font-weight:900;
+      color:var(--navy);
+      cursor:pointer;
+      gap:10px;
+    }
+
+    .faq-header i{
+      color:var(--primary);
+      font-size:16px;
+      flex-shrink:0;
+    }
+
+    .faq-answer{
+      font-size:13px;
+      color:var(--gray);
+      margin-top:10px;
+      line-height:1.6;
+      display:none;
+      font-weight:700;
+    }
+
+    .legal-card{
+      background:var(--white);
+      border-radius:20px;
+      padding:16px;
+      margin-bottom:12px;
+      border:1px solid var(--border);
+      box-shadow:0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .legal-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:12px 0;
+      border-bottom:1px solid var(--border);
+      color:var(--navy);
+      font-size:14px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .legal-row:last-child{
+      border-bottom:none;
+      padding-bottom:0;
+    }
+
+    .legal-row:first-child{
+      padding-top:0;
+    }
+
+    .legal-row i{
+      color:var(--primary);
+    }
+
+    .tip-box{
+      background:rgba(34,197,94,.10);
+      border:1px solid rgba(34,197,94,.22);
+      color:var(--navy);
+      border-radius:18px;
+      padding:14px;
+      font-size:13px;
+      line-height:1.65;
+      font-weight:800;
+    }
+
+    .bottom-nav{
+      position:absolute;
+      left:16px;
+      right:16px;
+      bottom:16px;
+      z-index:9999;
+      background:rgba(255,255,255,.92);
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:10px 8px;
+      display:flex;
+      justify-content:space-between;
+      gap:6px;
+      box-shadow:0 12px 28px rgba(31,60,90,.10);
+      backdrop-filter:blur(10px);
+    }
+
+    .nav-item{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:4px;
+      padding:10px 6px;
+      border-radius:16px;
+      text-decoration:none;
+      color:var(--gray);
+      font-weight:800;
+      font-size:11px;
+      transition:.15s;
+    }
+
+    .nav-item i{
+      font-size:16px;
+    }
+
+    .nav-item:active{
+      transform:scale(.98);
+    }
+
+    body.dark{
+      background:var(--dark-bg);
+    }
+
+    body.dark .mobile-frame{
+      background:var(--dark-frame);
+      box-shadow:0 20px 50px rgba(0,0,0,.35);
+    }
+
+    body.dark .back-btn{
+      background:var(--dark-card);
+      border-color:var(--dark-border);
+      color:var(--dark-text);
+    }
+
+    body.dark .header-title,
+    body.dark .hero .t,
+    body.dark .faq-header,
+    body.dark .legal-row{
+      color:var(--dark-text);
+    }
+
+    body.dark .section-title,
+    body.dark .hero .s,
+    body.dark .faq-answer{
+      color:var(--dark-muted);
+    }
+
+    body.dark .hero{
+      background:rgba(142,211,244,.08);
+      border-color:var(--dark-border);
+    }
+
+    body.dark .hero .icon,
+    body.dark .faq-card,
+    body.dark .legal-card,
+    body.dark .quick-contact button.secondary{
+      background:var(--dark-card);
+      border-color:var(--dark-border);
+    }
+
+    body.dark .quick-contact button.secondary{
+      color:var(--dark-text);
+    }
+
+    body.dark .legal-row{
+      border-bottom-color:var(--dark-border);
+    }
+
+    body.dark .tip-box{
+      color:var(--dark-text);
+      background:rgba(34,197,94,.08);
+      border-color:rgba(34,197,94,.18);
+    }
+
+    body.dark .bottom-nav{
+      background:rgba(35,35,35,.92);
+      border-color:var(--dark-border);
+    }
+
+    body.dark .nav-item{
+      color:var(--dark-muted);
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="mobile-frame">
+
+  <header>
+    <a class="back-btn" href="#" onclick="goBack(); return false;" aria-label="Back">
+      <i class="fa-solid fa-arrow-left"></i>
+    </a>
+    <div class="header-title">Support</div>
+    <div class="header-spacer"></div>
+  </header>
+
+  <div class="container">
+
+    <div class="hero">
+      <div class="icon"><i class="fa-solid fa-headset"></i></div>
+      <div class="t">Need help?</div>
+      <div class="s">Use this page for support, FAQs, and courier legal information related to UniBox services.</div>
+    </div>
+
+    <div class="section-title">Quick Contact</div>
+    <div class="quick-contact">
+      <button onclick="openChat()">Chat with Agent</button>
+      <button class="secondary" onclick="callCenter()">Call Center</button>
+      <button class="secondary" onclick="emailSupport()">Email Us</button>
+    </div>
+
+    <div class="section-title">Top FAQs</div>
+
+    <div class="faq-card">
+      <div class="faq-header" onclick="toggleFAQ(this)">
+        <span>How do I open my locker?</span>
+        <i class="fa-solid fa-plus"></i>
+      </div>
+      <div class="faq-answer">Go to the active order, choose the correct locker, scan the QR code, and follow the on-screen instructions.</div>
+    </div>
+
+    <div class="faq-card">
+      <div class="faq-header" onclick="toggleFAQ(this)">
+        <span>I cannot scan the QR code.</span>
+        <i class="fa-solid fa-plus"></i>
+      </div>
+      <div class="faq-answer">Make sure the QR is centered in the scan frame and the selected locker matches your order details.</div>
+    </div>
+
+    <div class="faq-card">
+      <div class="faq-header" onclick="toggleFAQ(this)">
+        <span>The locker did not open.</span>
+        <i class="fa-solid fa-plus"></i>
+      </div>
+      <div class="faq-answer">Retry from the locker selection page or choose another available locker. If the problem continues, contact support.</div>
+    </div>
+
+    <div class="faq-card">
+      <div class="faq-header" onclick="toggleFAQ(this)">
+        <span>How do I know the correct locker size?</span>
+        <i class="fa-solid fa-plus"></i>
+      </div>
+      <div class="faq-answer">The system automatically shows the allowed locker sizes based on the parcel size for your order.</div>
+    </div>
+
+    <div class="section-title">Legal</div>
+    <div class="legal-card">
+      <div class="legal-row" onclick="location.href='privacy2.html'">
+        <span>Courier Privacy Policy</span>
+        <i class="fa-solid fa-chevron-right"></i>
+      </div>
+      <div class="legal-row" onclick="location.href='terms2.html'">
+        <span>Courier Terms & Conditions</span>
+        <i class="fa-solid fa-chevron-right"></i>
+      </div>
+      <div class="legal-row" onclick="location.href='data-usage2.html'">
+        <span>Courier Data Usage</span>
+        <i class="fa-solid fa-chevron-right"></i>
+      </div>
+    </div>
+
+    <div class="section-title">Tip</div>
+    <div class="tip-box">
+      Always verify the parcel size and locker availability before proceeding to scan and confirm delivery.
+    </div>
+
+  </div>
+
+  <nav class="bottom-nav">
+    <a class="nav-item" href="home2.html">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </a>
+    <a class="nav-item" href="map2.html">
+      <i class="fa-solid fa-map-location-dot"></i>
+      <span>Map</span>
+    </a>
+    <a class="nav-item" href="locker-selection2.html">
+      <i class="fa-solid fa-box"></i>
+      <span>Lockers</span>
+    </a>
+    <a class="nav-item" href="profile2.html">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+</div>
+
+<script>
+function goBack(){
+  const params = new URLSearchParams(window.location.search);
+  const from = params.get("from");
+  const orderId = params.get("order");
+
+  if(from === "profile"){
+    window.location.href = "profile2.html";
+    return;
+  }
+
+  if(from === "settings"){
+    window.location.href = "settings2.html";
+    return;
+  }
+
+  if(from === "locker"){
+    if(orderId){
+      window.location.href = `locker-selection2.html?order=${encodeURIComponent(orderId)}`;
+    }else{
+      window.location.href = "locker-selection2.html";
+    }
+    return;
+  }
+
+  if(document.referrer && document.referrer !== ""){
+    history.back();
+  }else{
+    window.location.href = "home2.html";
+  }
+}
+
+function toggleFAQ(header) {
+  const answer = header.nextElementSibling;
+  const icon = header.querySelector('i');
+
+  if(answer.style.display === "block"){
+    answer.style.display = "none";
+    icon.classList.remove('fa-minus');
+    icon.classList.add('fa-plus');
+  } else {
+    answer.style.display = "block";
+    icon.classList.remove('fa-plus');
+    icon.classList.add('fa-minus');
+  }
+}
+
+function openChat(){
+  window.location.href = "chat2.html?from=support";
+}
+
+function callCenter(){
+  window.location.href = "call2.html?from=support";
+}
+
+function emailSupport(){
+  window.location.href = "mailto:unibox1234@gmail.com";
+}
+</script>
+
+<script>
+if(localStorage.getItem("unibox_dark_mode") === "1"){
+  document.body.classList.add("dark");
+}
+</script>
+
+</body>
+</html>

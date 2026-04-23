@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniBox - Map2</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <style>
+    :root{
+      --primary:#8ED3F4;--navy:#1F3C5A;--white:#fff;--gray:#6B6B6B;--border:#F1F4F9;--bg:#f0f2f5;
+      --dark-bg:#121212;--dark-frame:#1e1e1e;--dark-card:#232323;--dark-border:#2f2f2f;--dark-text:#f3f4f6;--dark-muted:#a7a7a7;
+    }
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+      -webkit-tap-highlight-color:transparent
+    }
+    body{
+      background:var(--bg);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100dvh;
+      transition:.25s
+    }
+    .mobile-frame{
+      width:375px;
+      height:812px;
+      background:var(--white);
+      border-radius:40px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      box-shadow:0 20px 50px rgba(0,0,0,.10);
+      position:relative
+    }
+    header{
+      padding:60px 24px 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px
+    }
+    .icon-btn{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--navy);
+      text-decoration:none;
+      cursor:pointer;
+      transition:.15s
+    }
+    .icon-btn:active{transform:scale(.98)}
+    .content{
+      flex:1;
+      overflow:hidden;
+      padding:10px 24px 168px;
+      display:flex;
+      flex-direction:column;
+      gap:12px
+    }
+    h1{
+      text-align:center;
+      font-size:22px;
+      font-weight:900;
+      color:var(--navy)
+    }
+    .sub{
+      text-align:center;
+      font-size:13px;
+      color:var(--gray);
+      font-weight:700;
+      margin-top:-6px
+    }
+    .card{
+      background:var(--white);
+      border-radius:20px;
+      padding:10px;
+      border:1px solid var(--border);
+      box-shadow:0 4px 12px rgba(0,0,0,.03);
+      flex:1;
+      min-height:0
+    }
+    #map{
+      width:100%;
+      height:100%;
+      border-radius:18px;
+      border:1px solid var(--border);
+      box-shadow:0 10px 22px rgba(31,60,90,.08)
+    }
+    .leaflet-container{border-radius:18px}
+    .footer-action{
+      position:absolute;
+      left:16px;
+      right:16px;
+      bottom:92px
+    }
+    .btn{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:16px;
+      background:var(--primary);
+      color:#fff;
+      font-weight:900;
+      font-size:14px;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(142,211,244,.30);
+      transition:.15s
+    }
+    .btn:active{transform:scale(.98)}
+    .btn.secondary{
+      margin-top:10px;
+      background:transparent;
+      color:var(--navy);
+      border:1px solid var(--border);
+      box-shadow:none
+    }
+    .bottom-nav{
+      position:absolute;
+      left:16px;
+      right:16px;
+      bottom:16px;
+      background:rgba(255,255,255,.92);
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:10px 8px;
+      display:flex;
+      justify-content:space-between;
+      gap:6px;
+      box-shadow:0 12px 28px rgba(31,60,90,.10);
+      backdrop-filter:blur(10px)
+    }
+    .nav-item{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:4px;
+      padding:10px 6px;
+      border-radius:16px;
+      text-decoration:none;
+      color:var(--gray);
+      font-weight:800;
+      font-size:11px;
+      transition:.15s
+    }
+    .nav-item i{font-size:16px}
+    .nav-item.active{
+      background:rgba(142,211,244,.18);
+      color:var(--navy);
+      border:1px solid rgba(142,211,244,.25)
+    }
+
+    body.dark{background:var(--dark-bg)}
+    body.dark .mobile-frame{background:var(--dark-frame);box-shadow:0 20px 50px rgba(0,0,0,.35)}
+    body.dark .icon-btn{background:var(--dark-card);border-color:var(--dark-border);color:var(--dark-text)}
+    body.dark h1{color:var(--dark-text)}
+    body.dark .sub{color:var(--dark-muted)}
+    body.dark .card{background:var(--dark-card);border-color:var(--dark-border);box-shadow:0 4px 12px rgba(0,0,0,.25)}
+    body.dark #map{border-color:var(--dark-border);box-shadow:0 10px 22px rgba(0,0,0,.35)}
+    body.dark .btn.secondary{color:var(--dark-text);border-color:var(--dark-border)}
+    body.dark .bottom-nav{background:rgba(35,35,35,.92);border-color:var(--dark-border)}
+    body.dark .nav-item{color:var(--dark-muted)}
+    body.dark .nav-item.active{color:var(--dark-text);background:rgba(142,211,244,.12);border:1px solid rgba(142,211,244,.20)}
+  </style>
+
+  <link rel="stylesheet" href="theme.css">
+</head>
+
+<body>
+  <div class="mobile-frame">
+    <header>
+      <a class="icon-btn" href="#" onclick="goBack(); return false;" aria-label="Back">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
+
+      <div style="flex:1;text-align:center;font-weight:900;color:var(--navy);">
+        UniBox
+      </div>
+
+      <a class="icon-btn" href="settings2.html" aria-label="Settings">
+        <i class="fa-solid fa-gear"></i>
+      </a>
+    </header>
+
+    <div class="content">
+      <h1>Map</h1>
+      <div class="sub" id="mapSub">Order Location</div>
+      <div class="card">
+        <div id="map"></div>
+      </div>
+    </div>
+
+    <div class="footer-action">
+      <button class="btn" onclick="openGoogleMaps()">Open in Google Maps</button>
+      <button class="btn secondary" onclick="openLocker()">Choose Locker</button>
+    </div>
+
+    <nav class="bottom-nav">
+      <a class="nav-item" href="home2.html">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+      </a>
+      <a class="nav-item active" href="map2.html">
+        <i class="fa-solid fa-map-location-dot"></i>
+        <span>Map</span>
+      </a>
+      <a class="nav-item" href="locker-selection2.html">
+        <i class="fa-solid fa-box"></i>
+        <span>Lockers</span>
+      </a>
+      <a class="nav-item" href="settings2.html">
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
+      </a>
+    </nav>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="components.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    function goBack() {
+      if (document.referrer && document.referrer !== "") {
+        history.back();
+      } else {
+        window.location.href = "home2.html";
+      }
+    }
+
+    function getFallbackOrder(orderId){
+      const demoOrders = {
+        "9821": {
+          id:"9821",
+          lockerZone:"A",
+          location:"Zone A, Locker Area 12",
+          lat:21.543333,
+          lng:39.172779
+        },
+        "9822": {
+          id:"9822",
+          lockerZone:"B",
+          location:"Zone B, Locker Area 15",
+          lat:21.550000,
+          lng:39.180000
+        },
+        "9823": {
+          id:"9823",
+          lockerZone:"C",
+          location:"Zone C, Locker Area 8",
+          lat:21.555500,
+          lng:39.188800
+        },
+        "9824": {
+          id:"9824",
+          lockerZone:"D",
+          location:"Zone D, Locker Area 10",
+          lat:21.560000,
+          lng:39.190000
+        },
+        "9825": {
+          id:"9825",
+          lockerZone:"E",
+          location:"Zone E, Locker Area 3",
+          lat:21.565000,
+          lng:39.194000
+        }
+      };
+
+      return demoOrders[String(orderId)] || null;
+    }
+
+    function getOrderByIdSafe(orderId){
+      try{
+        if(window.UniBox && typeof UniBox.getOrderById === "function"){
+          const realOrder = UniBox.getOrderById(orderId);
+          if(realOrder) return realOrder;
+        }
+      }catch(e){}
+      return getFallbackOrder(orderId);
+    }
+
+    const qsId = new URLSearchParams(location.search).get("order");
+    const lsId = localStorage.getItem("selectedOrderId");
+    const id = qsId || lsId || "";
+
+    const order = id ? getOrderByIdSafe(id) : null;
+
+    const lat = order?.lat ?? 24.7136;
+    const lng = order?.lng ?? 46.6753;
+    const zone = order?.lockerZone ?? "—";
+    const oid  = order?.id ?? "—";
+
+    document.getElementById("mapSub").innerText =
+      order ? `#${oid} • Zone ${zone}` : "No order selected";
+
+    const map = L.map("map").setView([lat, lng], 14);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:"© OpenStreetMap"
+    }).addTo(map);
+
+    const popup = order
+      ? `<b>Order #${oid}</b><br>${order.location || ""}<br>Zone ${zone}`
+      : `<b>Default Location</b><br>Riyadh`;
+
+    L.marker([lat, lng]).addTo(map).bindPopup(popup).openPopup();
+
+    setTimeout(() => map.invalidateSize(), 150);
+
+    function openGoogleMaps(){
+      window.open(`https://www.google.com/maps?q=${encodeURIComponent(lat)},${encodeURIComponent(lng)}`, "_blank");
+    }
+
+    function openLocker(){
+      if(!order){
+        window.location.href = "locker-selection2.html";
+        return;
+      }
+      window.location.href = `locker-selection2.html?order=${encodeURIComponent(order.id)}`;
+    }
+  </script>
+
+  <script>
+  if(localStorage.getItem("unibox_dark_mode") === "1"){
+      document.body.classList.add("dark");
+  }
+  </script>
+</body>
+</html>
